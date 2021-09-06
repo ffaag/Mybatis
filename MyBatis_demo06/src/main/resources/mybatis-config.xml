@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <!--导入db.properties配置文件-->
+    <properties resource="db.properties"></properties>
+
+
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+
+    <!--起别名-->
+    <typeAliases>
+        <!--给实体类起别名-->
+        <!--<typeAlias type="com.it.bean.User" alias="User1"></typeAlias>-->
+        <!--把这个包里面的所有类都起了别名，别名为类名的首字母小写，大写也可以-->
+        <package name="com.it.bean"/>
+    </typeAliases>
+
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+        <!--<environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/mybatis2?useSSL=true&amp;useUnicode=true&amp;characterEncoding=UTF-8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="fangzu"/>
+            </dataSource>
+        </environment>-->
+    </environments>
+
+    <!--注册mapper-->
+    <mappers>
+        <package name="com.it.dao"/>
+    </mappers>
+
+</configuration>

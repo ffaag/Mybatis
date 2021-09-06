@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.it.dao.BlogMapper">
+
+    <insert id="addBlog" parameterType="blog">
+        insert into blog (id, title, author, create_time, views)
+        values (#{id}, #{title}, #{author}, #{create_time}, #{views});
+    </insert>
+
+
+
+    <!--resultType: 1、基本类型  ：resultType=基本类型
+                    2、List类型：   resultType=List中元素的类型
+                    3、Map类型    单条记录：resultType =map  多条记录：resultType =Map中value的类型-->
+    <select id="queryBlogIF" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <if test="title != null">
+                and title = #{title}
+            </if>
+            <if test="author != null">
+                and author = #{author}
+            </if>
+        </where>
+    </select>
+
+    <!--choose标签类似于switch，只会选择一个满足的执行，从上到下选择一个-->
+    <select id="queryBlogChoose" resultType="blog" parameterType="map">
+        select * from blog
+        <where>
+            <choose>
+                <when test="title != null">
+                    and title = #{title}
+                </when>
+                <when test="author != null">
+                    and author = #{author}
+                </when>
+                <otherwise>
+                    and views = #{views}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+    <update id="updateBlogBySet" parameterType="map">
+        update blog
+        <set>
+            /*sql片段复用*/
+            <include refid="if_title_author"></include>
+        </set>
+        where id = #{id};
+    </update>
+
+
+    <!--定义sql片段，提高代码的可重用性，里面不要有where-->
+    <sql id="if_title_author">
+        <if test="title != null">
+            title = #{title},
+        </if>
+        <if test="author != null">
+            author = #{author},
+        </if>
+    </sql>
+
+    <select id="queryBlogForeach" parameterType="map" resultType="blog">
+        select * from blog
+        <where>
+            <foreach collection="ids" item="id" open="and (" close=")" separator="or">
+                id = #{id}
+            </foreach>
+        </where>
+    </select>
+
+
+
+</mapper>

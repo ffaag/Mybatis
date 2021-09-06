@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.it.dao.UserMapper">
+
+
+    <!--只要在接口所对应的mapper.xml文件中写上这样一个标签，那么这就是一个二级缓存，整个接口共用
+    虽然在全局配置文件中的设置中默认开启了全局缓存，但是我们还是显式的写出来以便查看 <setting name="cacheEnabled" value="true"/>-->
+    <cache />
+    <!--这里面的最后一个标签代表这次查询不用缓存，默认是使用的-->
+    <select id="getUsers1" resultType="user" useCache="false">
+        select * from user;
+    </select>
+
+
+
+
+    <!--一级缓存，一级缓存失效的四种情况‘
+    1、执行了增删改操作，可能会改变原来的数据，所以系统必定会刷新缓存
+    2、sqlSession不同，我们的一级缓存是以sqlSession级别缓存，换了sqlSession肯定不一样了
+    3、sqlSession相同，但执行不同的数据，此时缓存里面没有这个数据，肯定失效
+    4、sqlSession相同，但手动执行清除一级缓存： sqlSession.clearCache();   -->
+    <select id="getUsers" resultType="user">
+        select * from user;
+    </select>
+
+
+    <!--缓存顺序：
+    1、先看二级缓存中有没有
+    2、再看一级缓存中有没有
+    3、查询数据库-->
+
+
+</mapper>

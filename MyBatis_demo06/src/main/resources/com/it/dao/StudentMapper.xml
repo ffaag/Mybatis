@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.it.dao.StudentMapper">
+
+    <!--第一种：按查询嵌套处理-->
+    <select id="getStudents" resultMap="StudentTeacher">
+        select * from student;
+    </select>
+    <resultMap id="StudentTeacher" type="student">
+        <!--对于属性是对象的复杂类型，我们需要单独处理，这里对象用association，集合用collection-->
+        <association property="teacher" column="tid" javaType="teacher" select="getTeacher"></association>
+        <!--javaType：把sql语句的查询结果封装给某个类的对象
+            select：下一条要执行的语句
+            property：注入给实体类的哪个属性
+            column：在上次查询的结果集中，用哪些列值作为条件去执行下一条sql语句，column="{key=value,key=value}"-->
+    </resultMap>
+    <select id="getTeacher" resultType="teacher" parameterType="integer">
+        select * from teacher where id = #{tid};
+    </select>
+
+
+    <!--第二种：按结果嵌套处理-->
+    <select id="getStudents2" resultMap="StudentTeacher2" >
+        select s.id sid,
+               s.name sname,
+               t.id tid,
+               t.name tname
+        from student s,teacher t where s.tid = t.id
+    </select>
+    <resultMap id="StudentTeacher2" type="Student">
+        <result property="id" column="sid"/>
+        <result property="name" column="sname"/>
+        <!--关联对象property 关联对象在Student实体类中的属性-->
+        <association property="teacher" javaType="teacher">
+            <result property="id" column="tid" />
+            <result property="name" column="tname"/>
+        </association>
+    </resultMap>
+</mapper>

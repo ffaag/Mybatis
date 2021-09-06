@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+
+
+<!--namespace命名空间，绑定一个Dao/Mapper接口-->
+<mapper namespace="com.it.dao.UserMapper">
+
+
+    <resultMap id="UserMap" type="user">
+        <!--column数据库中的字段，property是javabean中的属性，一一映射，而且只需要把不一样的映射就好了-->
+        <!--<result column="id" property="id"></result>
+        <result column="name" property="name"></result>-->
+        <result column="pwd" property="password"></result>
+    </resultMap>
+
+
+    <!--select查询，id对应接口中的方法名字-->
+    <select id="getUserList" resultMap="UserMap">
+        select * from user;
+    </select>
+
+
+    <select id="getUserById" resultType="User" parameterType="Integer">
+        select * from user where id=#{id};
+    </select>
+
+
+    <!--对象中的属性可以直接取出来，不需要写user.id，当然要和bean中属性对应-->
+    <insert id="addUser" parameterType="User">
+        insert into user(id, name, pwd) values (#{id}, #{name}, #{pwd});
+    </insert>
+
+
+    <update id="updateUser" parameterType="User">
+        update user set name = #{name}, pwd = #{pwd} where id=#{id};
+    </update>
+
+
+    <delete id="deleteUserById" parameterType="Integer">
+        delete from user where id=#{id};
+    </delete>
+</mapper>
